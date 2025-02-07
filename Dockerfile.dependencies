@@ -103,7 +103,11 @@ RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
     && echo "install libewf" \
     && echo "#####################################" \
     && cd ${PKGTMPDIR} \
-    && git clone https://github.com/libyal/libewf \
+    && curl -L https://github.com/libyal/libewf-legacy/archive/refs/tags/20140816.tar.gz --output ${PKGTMPDIR}/ewflib.tar.gz \
+    && tar -xvzf ewflib.tar.gz \
+    && rm -rf ewflib.tar.gz \
+    && mv libewf-legacy-20140816 libewf \
+    #&& git clone https://github.com/libyal/libewf \
     && cd ${PKGTMPDIR}/libewf \  
     && ./synclibs.sh \
     && ./autogen.sh \
@@ -126,10 +130,10 @@ RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
     && cd ${PKGTMPDIR} \
     && git clone -b 4.12.0_iped_patch https://github.com/sepinf-inc/sleuthkit \
     && cd ${PKGTMPDIR}/sleuthkit/ \
-    && echo "Patching ewf.cpp to TSK (The SleuthKit) uses version 20231119 of libewf library" \
-    && echo "#####################################" \
-    && curl https://raw.githubusercontent.com/iped-docker/iped/master/resources/ewf.cpp.patch --output ${PKGTMPDIR}/ewf.cpp.patch \
-    && patch tsk/img/ewf.cpp < ${PKGTMPDIR}/ewf.cpp.patch \
+    #&& echo "Patching ewf.cpp to TSK (The SleuthKit) uses version 20231119 of libewf library" \
+    #&& echo "#####################################" \
+    #&& curl https://raw.githubusercontent.com/iped-docker/iped/master/resources/ewf.cpp.patch --output ${PKGTMPDIR}/ewf.cpp.patch \
+    #&& patch tsk/img/ewf.cpp < ${PKGTMPDIR}/ewf.cpp.patch \
     && echo "#####################################" \
     && ./bootstrap \ 
     && ./configure --prefix=/usr/ \
