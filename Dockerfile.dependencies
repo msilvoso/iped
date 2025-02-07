@@ -1,15 +1,16 @@
-# FROM nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
-FROM ubuntu:22.04
+FROM nvidia/cuda:12.8.0-cudnn-runtime-ubuntu22.04
+#FROM ubuntu:22.04
 
 ARG PKGTMPDIR=/tmp/pkgs
 
-ENV TZ=Brazil/East DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 LC_ALL=C.UTF-8 SAL_USE_VCLPLUGIN='gtk' \
+ENV TZ=Europe/Luxembourg DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8 LC_ALL=C.UTF-8 SAL_USE_VCLPLUGIN='gtk' \
     JAVA_HOME=/usr/lib/jvm/bellsoft-java11-full-amd64/ LD_LIBRARY_PATH=/usr/lib/:/usr/local/lib/python3.9/dist-packages/jep/
 
 RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
-    && apt-get update && apt-get install -y curl wget gnupg apt-utils apt-transport-https software-properties-common \
-    && apt-get dist-upgrade -y \
+    && apt-get update && apt-get dist-upgrade -y \
+    && apt-get install -y curl wget gnupg apt-utils apt-transport-https software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa \
+    && add-apt-repository ppa:alex-p/tesseract-ocr5 \
     && wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | tee /etc/apt/trusted.gpg.d/bellsoft.asc \
     && echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | tee /etc/apt/sources.list.d/bellsoft.list \
     && apt-get update \    
@@ -40,7 +41,7 @@ RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
             vim \
             less\
             libparse-win32registry-perl \
-            tesseract-ocr tesseract-ocr-osd tesseract-ocr-por tesseract-ocr-eng tesseract-ocr-deu tesseract-ocr-frk tesseract-ocr-ita \
+            tesseract-ocr tesseract-ocr-all \
             graphviz \  
             bellsoft-java11-full \
             mplayer \
@@ -224,7 +225,7 @@ RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
     #&& rm -rf ${PKGTMPDIR}/rifiuti2 
     && update-alternatives --install /usr/bin/rifiuti rifiuti /usr/bin/rifiuti2 1 \
     && echo "#####################################" \
-    && echo "Instal ImageMagik" \
+    && echo "Install ImageMagik" \
     && echo "#####################################" \
     && cd ${PKGTMPDIR} \
     && git clone --branch "7.1.1-21" https://github.com/ImageMagick/ImageMagick \
@@ -249,7 +250,7 @@ RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
     && python -m pip install dlib==19.24.2 \
     && python -m pip install numpy==1.26.4 \
     && python -m pip install jep==4.2.0 \
-    # && python -m pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117 \
+    && python -m pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117 \
     && echo "Due to container high storage usage, Tensorflow was removed - it's only used on yahoo image detection - if you want to use it, uncomment the following line:" \
     && echo "python -m pip install tensorflow==2.9.1 tensorrt==8.5.3.1" \
     && python -m pip install keras \
