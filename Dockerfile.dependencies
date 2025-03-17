@@ -48,7 +48,9 @@ RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
             rifiuti2 \
             python3.9 python3.9-distutils python3-pip python3.9-dev \
             sudo \ 
-    && echo "#####################################" \
+    && apt-get autoremove -y \
+    && apt-get clean
+RUN echo "#####################################" \
     && echo " Installing LIBSSL v1.1 to be used with sleuthkit IPED patch" \
     && echo "#####################################" \
     && echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list \
@@ -103,10 +105,10 @@ RUN mkdir -p ${PKGTMPDIR} && cd ${PKGTMPDIR} \
     && echo "install libewf" \
     && echo "#####################################" \
     && cd ${PKGTMPDIR} \
-    && curl -L https://github.com/libyal/libewf-legacy/archive/refs/tags/20140816.tar.gz --output ${PKGTMPDIR}/ewflib.tar.gz \
+    && curl -L https://github.com/libyal/libewf-legacy/archive/refs/tags/20140808.tar.gz --output ${PKGTMPDIR}/ewflib.tar.gz \
     && tar -xvzf ewflib.tar.gz \
     && rm -rf ewflib.tar.gz \
-    && mv libewf-legacy-20140816 libewf \
+    && mv libewf-legacy-20140808 libewf \
     #&& git clone https://github.com/libyal/libewf \
     && cd ${PKGTMPDIR}/libewf \  
     && ./synclibs.sh \
